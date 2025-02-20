@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dada Jee Ka Khet - Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Grandstander:wght@400;700&family=Authentic+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="game1.css" />
+  </head>
+  <body>
+    <header>
+      <img src="images/logo.png" alt="Logo" class="logo" />
+    </header>
+    <nav>
+      <a href="index.html">Back to Dada Jee Ka Khet</a>
+    </nav>
+
+    <div class="container">
+      <div class="title-container">
+        <h1 class="roman">Lafz Ko Tasveer se Milayein</h1>
+        <h1 class="urdu">لفظ کو تصویر سے ملائیں</h1>
+        <h1 class="english">Match the Word to the Picture</h1>
+      </div>
+
+      <div class="timer-container">
+        <label class="timer-label">
+          <input type="checkbox" id="timer-toggle" /> Enable Timed Mode
+        </label>
+
+        <div class="game-status hidden" id="game-status">
+          <div id="timer">Time: 60s</div>
+          <div id="score">Score: 0</div>
+        </div>
+      </div>
+
+      <div class="game-area">
+        <div class="image-container">
+          <img
+            id="target-image"
+            src=""
+            alt="Target Image"
+            class="target-image"
+          />
+        </div>
+
+        <div class="drop-zone" id="drop-zone">Drop the correct word here</div>
+
+        <div class="word-options" id="word-options">
+          <!-- Words will be inserted dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <script src="game1.js"></script>
+  </body>
+</html>
