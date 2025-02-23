@@ -1,11 +1,50 @@
-h1 {
-  font-size: 1.2rem;
-  color: #4a594a;
-  margin: 5px;
+/* Updated CSS for Dada Jee Ka Khet - Riddle Game */
+
+/* Define CSS variables for a modern, playful design */
+:root {
+  --primary: #7cccb7; /* Bold, playful orange */
+  --accent: #fdfdfd; /* For text and borders */
+  --background: #ff8585; /* Light, inviting background */
+  --secondary-bg: #074670; /* New secondary background color */
 }
 
+body {
+  color: var(--accent);
+  background: linear-gradient(135deg, var(--background), #074670b0);
+  font-family: "Grandstander", cursive, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header styling */
+header {
+  background: linear-gradient(135deg, var(--background), #074670b0);
+  padding: 20px;
+  text-align: center;
+}
+
+/* Navigation */
+nav {
+  text-align: center;
+}
+nav a {
+  text-decoration: none;
+  /* color: var(--accent); */
+  font-weight: bold;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Title Container */
 .title-container {
-  background-color: #b0c3b7;
+  background: var(--secondary-bg);
   padding: 15px;
   border-radius: 10px;
   text-align: center;
@@ -19,27 +58,32 @@ h1 {
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
-/* Change settings of game */
+/* Headings */
+h1 {
+  font-size: 1.5rem;
+  /* color: var(--accent); */
+  margin: 8px 0;
+}
 
+/* Settings Container */
 .settings-container {
   width: 250px;
-  background-color: #b89794;
-  border: 2px solid #4a594a;
-  border-radius: 8px;
+  background-color: var(--background);
+  border: 1px solid #ffffff;
+  border-radius: 10px;
   padding: 10px;
-  color: #ffffff;
   cursor: pointer;
   position: relative;
   user-select: none;
+  margin: 0 auto;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
   display: flex;
   justify-content: center;
   align-items: center;
   margin-left: auto;
   margin-right: auto;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .settings-header {
@@ -48,9 +92,6 @@ h1 {
   align-items: center;
   font-size: 16px;
   padding: 5px 10px;
-
-  border-radius: 6px;
-  color: #4a594a;
 }
 
 .settings-header .arrow {
@@ -64,18 +105,23 @@ h1 {
 .settings-dropdown {
   background-color: #ebe1e3;
   padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #4a594a;
+  border-radius: 10px;
+  border: 1px solid var(--accent);
   position: absolute;
   width: 250px;
   top: 100%;
   left: 0;
   z-index: 10;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
   display: none;
 }
 
 .settings-dropdown.visible {
-  display: block; /* Shown when 'visible' class is added */
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .settings-dropdown .difficulty-section,
@@ -90,10 +136,10 @@ h1 {
   gap: 8px;
   padding: 5px 0;
   font-size: 14px;
-  color: #4a594a;
+  color: var(--secondary-bg);
 }
 
-/* game container */
+/* Game Area */
 .game-area {
   display: flex;
   flex-direction: column;
@@ -101,62 +147,97 @@ h1 {
   gap: 20px;
 }
 
-/* dropzone for correct answer */
+/* Riddle Container */
+.riddle-container {
+  background-color: var(--primary);
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+  margin: 30px auto 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.riddle-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.riddle-box {
+  background: var(--secondary-bg);
+  padding: 15px;
+  border-radius: 10px;
+  min-width: 100px;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Drop Zone */
 .drop-zone {
   width: 220px;
   height: 80px;
-  border: 2px dashed #4a594a;
+  background: var(--primary);
+  border: 2px dashed var(--accent);
+  border-radius: 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  color: #4a594a;
+  color: var(--accent);
   font-weight: bold;
   text-align: center;
-  border-radius: 10px;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.drop-zone:hover {
+  transform: scale(1.05);
 }
 
-/* riddle */
-.riddle-container {
-  background-color: #e0cfd2;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  font-size: 18px;
-  font-weight: bold;
-}
-
+/* Word Options */
 .word-options {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 15px;
+  margin: 30px;
 }
 
 .word {
-  background-color: #b0c3b7;
+  background-color: var(--background);
   padding: 15px 30px;
-  border-radius: 10px;
+  border-radius: 15px;
   cursor: grab;
   font-size: 20px;
   text-align: center;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
-.word .roman {
-  text-transform: uppercase;
+.word:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
 }
-
 .word:active {
   cursor: grabbing;
 }
 
+.word .roman-text {
+  text-transform: uppercase;
+}
+
+/* Correct & Incorrect Feedback */
 .correct {
   color: white;
-  background-color: #4a594a;
-  border: 3px solid #bae1ba;
-  box-shadow: 0 0 15px #bae1ba;
+  background-color: #074670;
+  border: 3px solid var(--background);
+  box-shadow: 0 0 15px var(--primary);
   transition: all 0.5s ease;
 }
 
@@ -191,7 +272,7 @@ h1 {
   }
 }
 
-/* confetti code */
+/* Confetti Animation */
 .confetti-container {
   position: fixed;
   top: 0;
@@ -204,8 +285,8 @@ h1 {
 
 .confetti {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   animation: fall 3s linear infinite;
 }
@@ -218,48 +299,7 @@ h1 {
     transform: translateY(100vh) rotate(360deg);
   }
 }
-
-.riddle-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100px;
-  margin: 20px auto;
-}
-
-.riddle-row {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
-
-.riddle-box {
-  background: #f0f0f0;
-  padding: 15px;
-  border-radius: 5px;
-  min-width: 100px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.word-options {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.word-box {
-  background: #ddd;
-  padding: 10px;
-  cursor: grab;
-  border-radius: 5px;
-}
-
-.drop-zone {
-  background: #ffeeba;
-  padding: 20px;
-  text-align: center;
-  border: 2px dashed #ff9800;
-  margin-top: 20px;
-}
+/* 
+.container {
+  color: white;
+} */

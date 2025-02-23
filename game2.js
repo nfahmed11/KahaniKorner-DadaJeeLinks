@@ -570,12 +570,13 @@ function launchConfetti() {
 // settings container
 document.addEventListener("DOMContentLoaded", () => {
   const settingsContainer = document.querySelector(".settings-container");
-
   const settingsDropdown = document.getElementById("settings-dropdown");
   const difficultyOptions = document.querySelectorAll(
     "input[name='difficulty']"
   );
   const selectedDifficulty = document.getElementById("selected-difficulty");
+  const correctSound = new Audio("sounds/success.wav"); // Load sound
+  const incorrectSound = new Audio("sounds/incorrect.wav"); // Load sound
 
   // Toggle dropdown on hover
   settingsContainer.addEventListener("mouseenter", () => {
@@ -612,11 +613,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return filteredRiddles[Math.floor(Math.random() * filteredRiddles.length)];
   }
 
+  let currentRiddle = null; // 🔹 Global variable to store current riddle
+
   function updateRiddle() {
-    const riddleData = getRandomRiddle();
-    const riddleTexts = riddleData.riddles[currentDifficulty.toLowerCase()];
+    currentRiddle = getRandomRiddle(); // ✅ Ensures it's assigned first
+    if (!currentRiddle) return; // ✅ Ensures it's valid before using it
+    const riddleTexts = currentRiddle.riddles[currentDifficulty.toLowerCase()];
 
     riddlesContainer.innerHTML = ""; // Clear previous riddle
+    wordOptions.innerHTML = ""; // 🔹 Ensures word options reset properly
+
     const selectedLanguages = Object.keys(languageCheckboxes).filter(
       (lang) => languageCheckboxes[lang].checked
     );
@@ -664,13 +670,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     riddleRow.appendChild(riddleBox);
-
     riddlesContainer.appendChild(riddleRow);
-    generateWordOptions(riddleData.word.english);
+    generateWordOptions(currentRiddle.word);
   }
 
   function generateWordOptions(correctAnswer) {
+    if (!correctAnswer) return; // ✅ Ensures correctAnswer is defined before using it
     wordOptions.innerHTML = "";
+
     const wordCount =
       currentDifficulty === "Easy"
         ? 3
@@ -678,15 +685,16 @@ document.addEventListener("DOMContentLoaded", () => {
         ? 5
         : 10;
     const words = [
-      correctAnswer,
+      { romanUrdu: correctAnswer.romanUrdu, urdu: correctAnswer.urdu },
       ...getRandomIncorrectWords(wordCount - 1, correctAnswer),
     ];
     shuffleArray(words);
     words.forEach((word) => {
       const wordBox = document.createElement("div");
-      wordBox.classList.add("word-box");
-      wordBox.textContent = word;
+      wordBox.classList.add("word");
+      wordBox.innerHTML = `<p class='roman-text'>${word.romanUrdu}</p><p class='urdu-text'>${word.urdu}</p>`; // 🔹 Inserting Roman Urdu & Urdu
       wordBox.draggable = true;
+      wordBox.setAttribute("data-answer", JSON.stringify(word)); // 🔹 Storing correct answer as JSON
       wordBox.addEventListener("dragstart", dragStart);
       wordOptions.appendChild(wordBox);
     });
@@ -694,8 +702,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getRandomIncorrectWords(count, correctAnswer) {
     const allWords = riddles
-      .map((r) => r.word.english)
-      .filter((word) => word !== correctAnswer);
+      .map((r) => ({ romanUrdu: r.word.romanUrdu, urdu: r.word.urdu })) // 🔹 Extracts only Roman Urdu & Urdu
+      .filter((word) => word.romanUrdu !== correctAnswer.romanUrdu);
     shuffleArray(allWords);
     return allWords.slice(0, count);
   }
@@ -708,21 +716,45 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function dragStart(event) {
-    event.dataTransfer.setData("text", event.target.textContent);
+    event.dataTransfer.setData(
+      "text",
+      event.target.getAttribute("data-answer")
+    );
   }
 
   dropZone.addEventListener("dragover", (event) => event.preventDefault());
   dropZone.addEventListener("drop", (event) => {
+    if (!currentRiddle) return; // ✅ Prevents errors if riddle is missing
+
     event.preventDefault();
-    const droppedWord = event.dataTransfer.getData("text");
-    const correctWord = riddles.find(
-      (r) => r.riddles[currentDifficulty.toLowerCase()]
-    ).word.english;
-    if (droppedWord === correctWord) {
-      dropZone.textContent = "Correct!";
-      setTimeout(updateRiddle, 2000);
+
+    const droppedWord = JSON.parse(event.dataTransfer.getData("text"));
+    // const correctWord = getRandomRiddle().word;
+    const correctWord = currentRiddle.word; // ✅ Uses the stored displayed riddle
+
+    // 🔎 Checking if the dropped word matches the correct answer
+    if (
+      droppedWord.romanUrdu === correctWord.romanUrdu &&
+      droppedWord.urdu === correctWord.urdu
+    ) {
+      dropZone.innerHTML = `<div class="roman">${droppedWord.romanUrdu}</div><div class="urdu">${droppedWord.urdu}</div>`;
+      dropZone.classList.add("correct");
+
+      correctSound.play(); // ✅ Play success sound
+      launchConfetti(); // ✅ Launch confetti
+
+      setTimeout(() => {
+        updateRiddle();
+        dropZone.textContent = "Drop the correct word here"; // ✅ Reset drop zone after 2 seconds
+        dropZone.classList.remove("correct");
+      }, 2000);
     } else {
-      dropZone.textContent = "Try again!";
+      dropZone.textContent = "Try again!"; // ❌ Incorrect answer feedback
+      dropZone.classList.add("incorrect");
+      incorrectSound.play(); // ✅ Play incorrect sound
+      setTimeout(() => {
+        dropZone.classList.remove("incorrect");
+      }, 300);
     }
   });
 
